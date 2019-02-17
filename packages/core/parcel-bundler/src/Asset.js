@@ -271,6 +271,8 @@ class Asset {
     }
   }
 
+  replaceCssModuleClasses() {}
+
   generateErrorMessage(err) {
     return err;
   }

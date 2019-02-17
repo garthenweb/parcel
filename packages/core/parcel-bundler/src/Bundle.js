@@ -111,6 +111,28 @@ class Bundle {
     return hashes;
   }
 
+  getCssModuleClassMap(classes = new Map()) {
+    this.assets.forEach(asset => {
+      if (asset.generated.cssModules) {
+        console.log(asset.generated.cssModules);
+      }
+      // if (asset.generate()) {
+
+      // }
+    });
+    // if (this.name) {
+    //   let hashedName = this.getHashedBundleName(contentHash);
+    //   hashes.set(Path.basename(this.name), hashedName);
+    //   this.name = Path.join(Path.dirname(this.name), hashedName);
+    // }
+
+    for (let child of this.childBundles.values()) {
+      child.getCssModuleClassMap(classes);
+    }
+
+    return classes;
+  }
+
   getHashedBundleName(contentHash) {
     // If content hashing is enabled, generate a hash from all assets in the bundle.
     // Otherwise, use a hash of the filename so it remains consistent across builds.

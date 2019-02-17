@@ -105,8 +105,8 @@ class Bundler extends EventEmitter {
       target === 'node'
         ? false
         : typeof options.hmr === 'boolean'
-          ? options.hmr
-          : watch;
+        ? options.hmr
+        : watch;
     const scopeHoist =
       options.scopeHoist !== undefined ? options.scopeHoist : false;
     return {
@@ -299,9 +299,11 @@ class Bundler extends EventEmitter {
       this.bundleNameMap = this.mainBundle.getBundleNameMap(
         this.options.contentHash
       );
+      const cssModuleClassMap = this.mainBundle.getCssModuleClassMap();
 
       for (let asset of changedAssets) {
         asset.replaceBundleNames(this.bundleNameMap);
+        asset.replaceCssModuleClasses(cssModuleClassMap);
       }
 
       // Emit an HMR update if this is not the initial bundle.

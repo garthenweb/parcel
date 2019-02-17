@@ -24,6 +24,9 @@ class Pipeline {
       let generated = await this.processAsset(asset);
       for (let rendition of generated) {
         generatedMap[rendition.type] = rendition.value;
+        if (rendition.cssModules) {
+          generatedMap.cssModules = rendition.cssModules;
+        }
       }
     } catch (err) {
       error = errorUtils.errorToJson(err);

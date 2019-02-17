@@ -37,10 +37,16 @@ async function getConfig(asset) {
   }
 
   let postcssModulesConfig = {
-    getJSON: (filename, json) => (asset.cssModules = json),
-    Loader: createLoader(asset),
-    generateScopedName: (name, filename) =>
-      `${name}_${md5(filename).substr(0, 5)}`
+    getJSON: (filename, json) => {
+      Object.entries(json).forEach(([key, value]) => {
+        const selector = asset.generateTempComposesSelector(key);
+        asset.cssModules[selector] = [value, asset.cssModules[selector]].join(
+          ' '
+        );
+      });
+    }
+    // generateScopedName: (name, filename) =>
+    //   `${name}_${md5(filename).substr(0, 5)}`
   };
 
   if (config.plugins && config.plugins['postcss-modules']) {
@@ -78,19 +84,19 @@ async function getConfig(asset) {
   return config;
 }
 
-const createLoader = asset =>
-  class ParcelFileSystemLoader extends FileSystemLoader {
-    async fetch(composesPath, relativeTo, trace) {
-      let importPath = composesPath.replace(/^["']|["']$/g, '');
-      const {resolved} = asset.resolveDependency(importPath, relativeTo);
-      return FileSystemLoader.prototype.fetch.call(
-        this,
-        resolved,
-        relativeTo,
-        trace
-      );
-    }
-    get finalSource() {
-      return '';
-    }
-  };
+// const createLoader = asset =>
+//   class ParcelFileSystemLoader extends FileSystemLoader {
+//     async fetch(composesPath, relativeTo, trace) {
+//       let importPath = composesPath.replace(/^["']|["']$/g, '');
+//       const {resolved} = asset.resolveDependency(importPath, relativeTo);
+//       return FileSystemLoader.prototype.fetch.call(
+//         this,
+//         resolved,
+//         relativeTo,
+//         trace
+//       );
+//     }
+//     get finalSource() {
+//       return '';
+//     }
+//   };
